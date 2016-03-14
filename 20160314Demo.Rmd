@@ -217,3 +217,31 @@ VariableImportance=Importance(model,trainset,method="sensv")
 L=list(runs=1,sen=t(VariableImportance$imp),sresponses=VariableImportance$sresponses)
 mgraph(L,graph="IMP",leg=names(trainset),col="gray",Grid=10)
 ```
+
+
+```{r}
+churn.rp<-rpart(churn ~., data=trainset)
+chrun_predict = predict(churn.rp, testset, type="class")
+confusionMatrix(table(chrun_predict, testset$churn))
+
+table(testset$churn)
+877 / (141 + 877)
+
+```
+
+### roc curce
+
+```{r}
+#install.packages("ROCR")
+library(ROCR)
+predictions <-predict(churn.rp, testset, type="prob")
+head(predictions)
+pred.to.roc<-predictions[, 1]
+head(pred.to.roc)
+pred.rocr<-prediction(pred.to.roc, testset$churn)
+pred.rocr
+perf.rocr<-performance(pred.rocr, measure ="auc", x.measure="cutoff")
+perf.tpr.rocr<-performance(pred.rocr, "tpr","fpr")
+plot(perf.tpr.rocr,colorize=T,main=paste("AUC:",(perf.rocr@y.values)))
+
+```
