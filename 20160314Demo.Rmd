@@ -94,5 +94,49 @@ text(fit)
 plot(iris$Petal.Length, iris$Petal.Width, col=iris$Species)
 abline(v = 2.45, col ="blue")
 abline(h = 1.75, col ="orange")
+predict_one = predict(fit, iris[1,])
+
+predict_all = predict(fit, iris)
+table(iris$Species, predict_all)
 ```
 
+
+```{r}
+#install.packages("party")
+library(party)
+data(iris)
+head(iris)
+
+fit2 = ctree(Species ~ Sepal.Length + Sepal.Width + Petal.Length + Petal.Width, data = iris)
+plot(fit, margin=0.1)
+
+plot(iris$Petal.Length, iris$Petal.Width, col=iris$Species)
+abline(v = 1.9, col ="blue")
+abline(h = 1.7, col ="orange")
+abline(v = 4.8, col ="red")
+predict_all2 = predict(fit2, iris)
+table(iris$Species, predict_all2)
+```
+
+
+```{r}
+#install.packages("e1071")
+library(e1071)
+data(iris)
+head(iris)
+
+fit3 = svm(Species ~ Sepal.Length + Sepal.Width + Petal.Length + Petal.Width, data = iris)
+
+predict_all3 = predict(fit3, iris)
+table(iris$Species, predict_all3)
+```
+
+
+```{r}
+library(e1071)
+
+fit4 = naiveBayes(Species ~ ., data = iris)
+
+predict_all4 = predict(fit4, iris)
+table(iris$Species, predict_all4)
+```
