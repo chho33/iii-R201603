@@ -5,6 +5,47 @@ date: "2016年3月14日"
 output: html_document
 ---
 
+# Heading1
+## Heading2
+###  Heading3
+
+### item
+- list1
+- list2
+- list3
+    1. qoo
+    2. oop
+    3. ooc
+    
+```
+this is a code block
+```
+
+```{r}
+a = 3
+b = 2
+a + b
+
+```
+
+```{r echo=FALSE}
+#echo =FALSE
+a + b
+
+```
+
+```{r eval=FALSE}
+#eval =FALSE
+a + b
+
+```
+
+```{r include=FALSE}
+#include =FALSE
+a + b
+```
+
+
 ## TW2330 Analysis
 ```{r include=FALSE}
 #download.file("http://real-chart.finance.yahoo.com/table.csv?s=2330.TW&d=2&e=14&f=2016&g=d&a=0&b=4&c=2000&ignore=.csv", "2330.csv")
@@ -32,4 +73,26 @@ table(tw2330$tf)
 
 ```
 
+### Learning map
+- http://scikit-learn.org/stable/_static/ml_map.png
+- http://people.revoledu.com/kardi/tutorial/DecisionTree/how-to-measure-impurity.htm
+- http://images.slideplayer.com/16/5055084/slides/slide_20.jpg
+
+## Iris Classfication with rpart
+```
+install.packages("rpart")
+
+```
+```{r}
+library(rpart)
+data(iris)
+head(iris)
+
+fit = rpart(Species ~ Sepal.Length + Sepal.Width + Petal.Length + Petal.Width, data = iris)
+plot(fit, margin=0.1)
+text(fit)
+plot(iris$Petal.Length, iris$Petal.Width, col=iris$Species)
+abline(v = 2.45, col ="blue")
+abline(h = 1.75, col ="orange")
+```
 
