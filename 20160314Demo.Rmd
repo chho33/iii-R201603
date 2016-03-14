@@ -96,7 +96,7 @@ abline(v = 2.45, col ="blue")
 abline(h = 1.75, col ="orange")
 predict_one = predict(fit, iris[1,])
 
-predict_all = predict(fit, iris)
+predict_all = predict(fit, iris, type="class")
 table(iris$Species, predict_all)
 ```
 
@@ -140,3 +140,59 @@ fit4 = naiveBayes(Species ~ ., data = iris)
 predict_all4 = predict(fit4, iris)
 table(iris$Species, predict_all4)
 ```
+
+### Churn analysis
+```{r}
+#install.packages("C50")
+library(C50)
+
+data(churn)
+str(churnTrain)
+names(churnTrain) %in% c("state", "area_code", "account_length")
+! names(churnTrain) %in% c("state", "area_code", "account_length")
+churnTrain=churnTrain[,!names(churnTrain)%in%c("state", "area_code", "account_length")]
+
+set.seed(2)
+ind<-sample(2, nrow(churnTrain), replace=TRUE, prob=c(0.7, 0.3))
+trainset=churnTrain[ind==1,]
+testset=churnTrain[ind==2,]
+
+
+table(sample(2, replace=TRUE,100))
+table(sample(2, replace=TRUE,100, prob=c(0.7,0.3)))
+
+a = c(1,2,3,4,5,6,7,8,9)
+ind = c(1,0,1,0,1,0,1,0,1)
+ind == 1
+a[ind == 1]
+a[ind == 0]
+
+```
+
+### rpart analysis
+```{r}
+churn.rp<-rpart(churn ~., data=trainset)
+plot(churn.rp, margin=0.1)
+text(churn.rp, all=TRUE, use.n=TRUE)
+```
+
+### Prune
+```{r}
+min(churn.rp$cptable[,"xerror"])
+which.min(churn.rp$cptable[,"xerror"])
+churn.cp = churn.rp$cptable[8, "CP"]
+prune.tree=prune(churn.rp, cp=churn.cp)
+plot(prune.tree, margin=0.1)
+text(prune.tree, all=TRUE, use.n=TRUE)
+
+
+predictions <-predict(churn.rp, testset, type="class")
+table(testset$churn, predictions)
+```
+
+### ctree analysis
+```{r}
+churn.rp<-ctree(churn ~., data=trainset)
+plot(churn.rp, margin=0.1)
+```
+
