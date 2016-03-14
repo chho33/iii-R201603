@@ -196,3 +196,24 @@ churn.rp<-ctree(churn ~., data=trainset)
 plot(churn.rp, margin=0.1)
 ```
 
+
+### caret cross- validation
+```{r}
+#install.packages("caret")
+library(caret)
+control=trainControl(method="repeatedcv", number=10, repeats=3)
+model =train(churn~., data=trainset, method="rpart", preProcess="scale", trControl=control)
+model
+predict(model, testset)
+
+```
+
+```{r}
+#install.packages("rminer")
+library(rminer)
+model=fit(churn~.,trainset,model="svm")
+VariableImportance=Importance(model,trainset,method="sensv")
+
+L=list(runs=1,sen=t(VariableImportance$imp),sresponses=VariableImportance$sresponses)
+mgraph(L,graph="IMP",leg=names(trainset),col="gray",Grid=10)
+```
