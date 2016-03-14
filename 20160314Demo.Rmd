@@ -2,7 +2,7 @@
 title: "20160314Tutorial"
 author: "David Chiu"
 date: "2016年3月14日"
-output: pdf_document
+output: html_document
 ---
 
 ## TW2330 Analysis
@@ -17,6 +17,7 @@ max(tw2330$Close)
 min(tw2330$Close)
 summary(tw2330$Close)
 hist(tw2330$Close)
+boxplot(tw2330$Close)
 
 lower_bound = max(min(tw2330$Close), median(tw2330$Close) - 1.5 * IQR(tw2330$Close))
 upper_bound = min(max(tw2330$Close), median(tw2330$Close) + 1.5 * IQR(tw2330$Close))
