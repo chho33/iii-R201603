@@ -73,8 +73,9 @@ plot(customer, col=fit$cluster)
 set.seed(22)
 fit =kmeans(iris[,-5], 3)
 barplot(t(fit$centers), beside =TRUE,xlab="cluster", ylab="value")
-
 plot(iris, col=fit$cluster)
+
+plot(iris$Sepal.Length, iris$Petal.Width, col=fit$cluster)
 
 ```
 
