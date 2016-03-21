@@ -78,5 +78,34 @@ plot(iris, col=fit$cluster)
 plot(iris$Sepal.Length, iris$Petal.Width, col=fit$cluster)
 
 ```
+```{r}
+set.seed(22)
+km =kmeans(customer, 4)
+kms=silhouette(km$cluster,dist(customer))
+summary(kms)
+plot(kms)
+
+```
+
+```{r}
+nk=2:10
+set.seed(22)
+WSS =sapply(nk, function(k){
+  kmeans(customer, centers=k)$tot.withinss
+  })
+
+WSS
+plot(nk, WSS, type="l", xlab="number of k", ylab="within sum of squares")
+```
+
+```{r}
+#install.packages("fpc")
+library(fpc)
+SW =sapply(nk, function(k){cluster.stats(dist(customer), kmeans(customer, centers=k)$cluster)$avg.silwidth
+  })
+plot(nk, SW, type="l", xlab="number of clusers", ylab="average silhouette width")
+```
+
+
 
 
