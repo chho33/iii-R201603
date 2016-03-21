@@ -106,6 +106,44 @@ SW =sapply(nk, function(k){cluster.stats(dist(customer), kmeans(customer, center
 plot(nk, SW, type="l", xlab="number of clusers", ylab="average silhouette width")
 ```
 
+```{r}
+single_c=hclust(dist(customer), method="single")
+hc_single=cutree(single_c, k =4)
 
+complete_c=hclust(dist(customer), method="complete")
+hc_complete=cutree(complete_c, k =4)
+
+set.seed(22)
+km =kmeans(customer, 4)
+
+cs=cluster.stats(dist(customer),km$cluster)
+cs[c("within.cluster.ss","avg.silwidth")]
+
+sapply(
+  list(kmeans=km$cluster, 
+       hc_single=hc_single, 
+       hc_complete=hc_complete), function(c)cluster.stats(dist(customer), c)[c("within.cluster.ss","avg.silwidth")])
+
+
+
+```
+
+```{r}
+data(iris)
+data<-iris[,-5]
+class<-iris[,5]
+
+results <-kmeans(data,3)
+results
+results$size
+results$cluster
+
+table(class,results$cluster)
+par(mfrow=c(2, 2))
+plot(data$Petal.Length, data$Petal.Width,col=results$cluster)
+plot(data$Petal.Length, data$Petal.Width,col=class)
+plot(data$Sepal.Length, data$Sepal.Width,col=results$cluster)
+plot(data$Sepal.Length, data$Sepal.Width,col=class)
+```
 
 
