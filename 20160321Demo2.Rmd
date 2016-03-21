@@ -50,3 +50,32 @@ plot(hc2, hang =-0.01, cex=0.7)
 
 ```
 
+```{r}
+fit =cutree(hc, k =4)
+table(fit)
+plot(hc)
+rect.hclust(hc, k =4, border="red")
+rect.hclust(hc, k =3, border="blue")
+
+```
+
+```{r}
+str(customer)
+set.seed(22)
+fit =kmeans(customer, 4)
+barplot(t(fit$centers), beside =TRUE,xlab="cluster", ylab="value")
+
+plot(customer, col=fit$cluster)
+
+```
+
+```{r}
+set.seed(22)
+fit =kmeans(iris[,-5], 3)
+barplot(t(fit$centers), beside =TRUE,xlab="cluster", ylab="value")
+
+plot(iris, col=fit$cluster)
+
+```
+
+
