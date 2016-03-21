@@ -1,0 +1,52 @@
+---
+title: "20160321Demo2"
+author: "David Chiu"
+date: "2016年3月21日"
+output: html_document
+---
+
+```{r}
+
+x =c(0, 0, 1, 1, 1, 1)
+y =c(1, 0, 1, 1, 0, 1)
+
+#euclidean
+dist(rbind(x,y), method ="euclidean")
+sqrt(sum((x-y)^2))
+dist(rbind(x,y), method ="minkowski", p=2)
+
+#city block
+dist(rbind(x,y), method ="manhattan")
+sum(abs(x-y))
+dist(rbind(x,y), method ="minkowski", p=1)
+
+```
+
+```{r}
+# customer clustering
+customer=read.csv('customer.csv',header=TRUE)
+head(customer)
+str(customer)
+customer =scale(customer[,-1])
+hc=hclust(dist(customer, method="euclidean"), method="ward.D2")
+plot(hc, hang =-0.01, cex=0.7)
+
+hc3 =hclust(dist(customer), method="single")
+plot(hc3, hang =-0.01, cex=0.7)
+
+
+library(cluster)
+#?diana
+dv =diana(customer, metric ="euclidean")
+summary(dv)
+plot(dv)
+
+# iris clustering
+data(iris)
+hc2=hclust(dist(iris[,-5], method="euclidean"), method="ward.D2")
+plot(hc2, hang =-0.01, cex=0.7)
+
+
+
+```
+

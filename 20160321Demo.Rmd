@@ -45,7 +45,7 @@ rtddt = apple %>% html_nodes('.rtddt')
 time = sapply(rtddt, function(e) (e %>% html_node('time') %>% html_text() )) %>% iconv(from='UTF-8', to='UTF-8')
 h1 = sapply(rtddt, function(e) (e %>% html_node('h1') %>% html_text() )) %>% iconv(from='UTF-8', to='UTF-8') 
 h2 = sapply(rtddt, function(e) (e %>% html_node('h2') %>% html_text() ))  %>% iconv(from='UTF-8', to='UTF-8')
-url1 = sapply(rtddt, function(e) (e %>% html_node('a') %>% html_attr('href') %>% sub("http://www.appledaily.com.tw", ""))) 
+url1 = sapply(rtddt, function(e) (e %>% html_node('a') %>% html_attr('href') %>% gsub("http://www.appledaily.com.tw", ""))) 
 url = paste0(domain,url1) 
 Sys.setlocale(category = "LC_ALL", locale="")
 applenews = data.frame(title= h1, caregory = h2, time = time)
@@ -74,22 +74,35 @@ getDetail = function(url){
 }
 
 applenews = data.frame()
-for(i in seq(1,3,1)){
-  apple = read_html(paste0('http://www.appledaily.com.tw/realtimenews/section/new/', as.character(i)), encoding="UTF-8")
-  rtddt = apple %>% html_nodes('.rtddt')  
-  url1 = sapply(rtddt, function(e) (e %>% html_node('a') %>% html_attr('href') %>% sub("http://www.appledaily.com.tw", "" ))) 
-  url = paste0(domain,url1) 
+for(i in seq(1,30,1)){
+  apple   = read_html(paste0('http://www.appledaily.com.tw/realtimenews/section/new/', as.character(i)), encoding="UTF-8")
+  rtddt   = apple %>% html_nodes('.rtddt')  
+  url1    = sapply(rtddt, function(e) (e %>% html_node('a') %>% html_attr('href'))) 
+  url     = paste0(domain, gsub("http://www.appledaily.com.tw", "",url1) ) 
   content = sapply(url, function(e) getDetail(e))  
-  time = sapply(rtddt, function(e) (e %>% html_node('time') %>% html_text() )) %>% iconv(from='UTF-8', to='UTF-8')
-  h1 = sapply(rtddt, function(e) (e %>% html_node('h1') %>% html_text() )) %>% iconv(from='UTF-8', to='UTF-8') 
-  h2 = sapply(rtddt, function(e) (e %>% html_node('h2') %>% html_text() ))  %>% iconv(from='UTF-8', to='UTF-8')
+  time    = sapply(rtddt, function(e) (e %>% html_node('time') %>% html_text() )) %>% iconv(from='UTF-8', to='UTF-8')
+  h1      = sapply(rtddt, function(e) (e %>% html_node('h1') %>% html_text() )) %>% iconv(from='UTF-8', to='UTF-8') 
+  h2      = sapply(rtddt, function(e) (e %>% html_node('h2') %>% html_text() ))  %>% iconv(from='UTF-8', to='UTF-8')
   applenews = rbind(applenews, data.frame(title= h1, caregory = h2, time = time, content= content))  
 }
 
 
 
 Sys.setlocale(category = "LC_ALL", locale="")
-applenews
+
+```
+```{r}
+applenews$title = as.character(applenews$title)
+applenews$content = as.character(applenews$content)
+install.packages("jiebaR")
+library(jiebaR)
+
+ library(stringr) 
+mixseg = worker() 
+applenews$words <- sapply(applenews$content, function(e) paste(segment(code= str_trim(as.character(e)) , jiebar = mixseg), collapse=" ") ) 
+word_vec = unlist(strsplit(applenews$words, ' ')) 
+uniq_vec = unique(word_vec) 
+phrase = uniq_vec[nchar(uniq_vec)>=2] 
 ```
 
 
